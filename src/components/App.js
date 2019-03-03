@@ -12,8 +12,12 @@ class App extends React.Component {
       selectedVideo: null
    }
    
+   componentDidMount () {
+      this.onTermSubmit("buildings");
+   }
+
    // runs every time the search form is submitted
-   // onTermSubmit makes the request to the youtube search API
+   // onTermSubmit makes request to youtube search API and fetches videos.
    onTermSubmit = async term => {
       // youtube.get() is called, which is a pre-configured instance of axios.
       // accesses the search endpoint
@@ -22,7 +26,10 @@ class App extends React.Component {
             q: term
          }
       });
-      this.setState({ videos: response.data.items});
+      this.setState({ 
+         videos: response.data.items,
+         selectedVideo: response.data.items[0]
+      });
    }; 
 
    onVideoSelect = (video) => {
