@@ -1,35 +1,42 @@
 import React from  'react';
 import SearchBar from './SearchBar';
 import youtube from '../apis/youtube';
+import VideoList from './VideoList';
+import VideoDetail from './VideoDetail';
+
 
 // holds application state
 class App extends React.Component {
    state = {
-      videos: [] // empty array is default value
+      videos: [], // empty array is default value
+      selectedVideo: null
    }
    
    // runs every time the search form is submitted
-   // 'term' is what the user entered in the searchBar
-   // onTermSubmit is added to the SearchBar component in render as a p   rop
+   // onTermSubmit makes the request to the youtube search API
    onTermSubmit = async term => {
-      // youtube function is called, which is a pre-configured instance of axios.
-      // the route or path to where the get request is made goes in the parens.
+      // youtube.get() is called, which is a pre-configured instance of axios.
       // accesses the search endpoint
-      // 2nd argument is the params object with the search term
       const response = await youtube.get('/search', {
          params: {
             q: term
          }
       });
       this.setState({ videos: response.data.items});
-      
    }; 
+
+   onVideoSelect = (video) => {
+      this.setState({ selectedVideo: video});   
+   };
    
    render() {
       return (
          <div className="ui container">
             <SearchBar onFormSubmit={this.onTermSubmit} />
-            I have {this.state.videos.length} videos.
+            <VideoDetail video={this.state.selectedVideo} />
+            <VideoList 
+               onVideoSelect={this.onVideoSelect}
+               videos={this.state.videos} />
          </div>
       );
    }
